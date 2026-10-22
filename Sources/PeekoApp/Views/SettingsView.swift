@@ -152,9 +152,10 @@ struct SettingsView: View {
                     Divider().overlay(Color.white.opacity(0.08))
                     linkRow("Your data", action: "Reveal in Finder") { model.revealDataFolder() }
                     linkRow("Everything in one file", action: "Export JSON…") { model.exportData() }
-                    linkRow("Updates", action: "Releases on GitHub") {
-                        NSWorkspace.shared.open(URL(string: "https://github.com/STACK-42/peeko/releases")!)
-                    }
+                    linkRow("Updates", action: "Check now") { model.checkForUpdates() }
+                    Text("Peeko looks for a new version once a day.")
+                        .font(Theme.mono(10))
+                        .foregroundStyle(Theme.muted)
                 }
                 .card()
             }

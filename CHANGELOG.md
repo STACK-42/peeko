@@ -10,6 +10,7 @@ All notable changes to Peeko are listed here. The format follows [Keep a Changel
 
 ### Added
 
+- Auto-updates. Peeko looks for a new version once a day, and Settings → Check now looks right away. Updates are signed, and Peeko only installs ones signed by this project. This works from this version on; anyone on 0.2.0 installs this one by hand.
 - An optional GitHub token in Settings, so pushes to private repos count too. Peeko keeps it in your Keychain and sends it only to GitHub. A classic token with the repo scope works.
 - "Solved a LeetCode problem" and "Solved a Codeforces problem": an accepted solution today, checked like the GitHub push (Codeforces' official API; LeetCode's public GraphQL, which is unofficial). When a site can't be reached, the task says so.
 
