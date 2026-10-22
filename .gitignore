@@ -11,3 +11,7 @@ CLAUDE.local.md
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Personal editor settings and scratch notes
+.vscode/
+prompt.txt
