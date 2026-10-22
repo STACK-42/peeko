@@ -26,6 +26,7 @@ final class AppModel {
     let scheduler: Scheduler
     private let store: Store
     private let notifier = Notifier()
+    @ObservationIgnored private let updater = Updater()
     private(set) var taskList: TaskList
     private(set) var settings: AppSettings
     private(set) var notificationStatus: UNAuthorizationStatus = .notDetermined
@@ -330,6 +331,10 @@ final class AppModel {
             await scheduler.refresh()
             githubProblem = await scheduler.githubProblem()
         }
+    }
+
+    func checkForUpdates() {
+        updater.checkForUpdates()
     }
 
     func refreshSystemStatus() async {

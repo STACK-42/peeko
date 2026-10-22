@@ -36,6 +36,12 @@
 	<string>© 2026 Ahmed Alghali. MIT License.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>Peeko reads which of todays reminders you finished, for the "Cleared todays Reminders" task. Nothing leaves your Mac.</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://github.com/STACK-42/peeko/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>Km+IExw6QEK/jBbJHgsXKY/JXOTT+3VMOEns6mMNgQc=</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Peeko reads which of todays reminders you finished, for the "Cleared todays Reminders" task. Nothing leaves your Mac.</string>
 </dict>
