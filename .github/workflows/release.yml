@@ -42,6 +42,18 @@ jobs:
             exit 1
           fi
 
+      # Installed copies find updates at releases/latest/download/appcast.xml (SUFeedURL).
+      # Without the key the DMG would be unsigned and Sparkle would refuse it, so stop here.
+      - name: Sparkle appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
+            echo "::error::The SPARKLE_PRIVATE_KEY secret isn't set"
+            exit 1
+          fi
+          scripts/appcast.sh build/release-notes.md
+
       # A fixed name too, so releases/latest/download/Peeko.dmg always gets the newest one.
       - name: Unversioned DMG copy
         run: cp "build/Peeko-$VERSION.dmg" build/Peeko.dmg
@@ -54,3 +66,4 @@ jobs:
             build/Peeko-${{ env.VERSION }}.dmg
             build/Peeko-${{ env.VERSION }}.dmg.sha256
             build/Peeko.dmg
+            build/appcast.xml
