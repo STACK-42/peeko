@@ -6,6 +6,7 @@ import UserNotifications
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @ViewState private var username = ""
+    @ViewState private var token = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -25,9 +26,36 @@ struct SettingsView: View {
                         }
                     }
                     .font(.system(size: 13))
-                    Text("Public pushes only. Checked every 10 minutes.")
+                    Divider().overlay(Color.white.opacity(0.08))
+                    if model.hasGitHubToken {
+                        HStack {
+                            Text("Token saved in Keychain").font(.system(size: 13))
+                            Spacer()
+                            Button("Remove") { model.setGitHubToken("") }
+                                .buttonStyle(.plain)
+                                .font(Theme.mono().weight(.medium))
+                                .foregroundStyle(Theme.muted)
+                        }
+                    } else {
+                        HStack(spacing: 6) {
+                            SecureField("token for private repos (optional)", text: $token)
+                                .textFieldStyle(.plain)
+                                .onSubmit(commitToken)
+                            if !token.isEmpty {
+                                Button("Save", action: commitToken)
+                                    .buttonStyle(.plain)
+                                    .font(Theme.mono().weight(.medium))
+                                    .foregroundStyle(Theme.green)
+                            }
+                        }
+                        .font(.system(size: 13))
+                    }
+                    Text(model.hasGitHubToken
+                         ? "Public and private pushes. Checked every 10 minutes."
+                         : "Public pushes only. Add a classic token with the repo scope to count private ones too. Checked every 10 minutes.")
                         .font(Theme.mono(10))
                         .foregroundStyle(Theme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .card()
             }
@@ -176,6 +204,11 @@ struct SettingsView: View {
         let name = trimmedUsername
         username = name
         model.updateSettings { $0.githubUsername = name }
+    }
+
+    private func commitToken() {
+        model.setGitHubToken(token)
+        token = ""
     }
 
     private var nudgeTime: Binding<Date> {
