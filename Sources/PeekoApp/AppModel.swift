@@ -32,6 +32,8 @@ final class AppModel {
     private(set) var launchAtLoginStatus: SMAppService.Status = SMAppService.mainApp.status
     private(set) var accessibilityTrusted = Accessibility.isTrusted
     private(set) var githubProblem: String?
+    /// Whether a GitHub token is saved in Keychain. The token itself never leaves Keychain and the client.
+    private(set) var hasGitHubToken = false
     /// Last problem per online task (feeds, Duolingo, LeetCode, Codeforces), by task id.
     private(set) var onlineProblems: [String: String] = [:]
     private var localError: String?
@@ -42,6 +44,7 @@ final class AppModel {
 
     private static let lastNudgeDayKey = "lastNudgeDay"
     private static let launchAtLoginDefaultKey = "launchAtLoginDefaultApplied"
+    private static let githubTokenAccount = "github-token"
 
     init(store: Store = Store(directory: Store.defaultDirectory), bundle: Bundle = .main) {
         self.store = store
@@ -56,6 +59,8 @@ final class AppModel {
         )
         scheduler.tasks = taskList.tasks
         scheduler.githubUsername = settings.githubUsername
+        let token = Keychain.read(Self.githubTokenAccount)
+        hasGitHubToken = token != nil
         scheduler.onAutoComplete = { [weak self] task in self?.notifyCompleted(task) }
         scheduler.onTick = { [weak self] sample in
             self?.nudgeIfDue(now: sample.now)
@@ -71,7 +76,10 @@ final class AppModel {
                 if problems != self.onlineProblems { self.onlineProblems = problems }
             }
         }
-        scheduler.start()
+        Task { [scheduler] in
+            await scheduler.setGitHubToken(token)
+            scheduler.start()
+        }
         loadHistoryIfNeeded()
         turnOnLaunchAtLoginOnce()
         Task { await refreshSystemStatus() }
@@ -300,6 +308,27 @@ final class AppModel {
         if usernameChanged {
             scheduler.githubUsername = settings.githubUsername
             Task { await scheduler.refresh() }
+        }
+    }
+
+    /// Saves the token to Keychain, or removes it when blank, and checks GitHub again with it.
+    func setGitHubToken(_ token: String) {
+        let trimmed = token.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            Keychain.delete(Self.githubTokenAccount)
+            hasGitHubToken = false
+        } else {
+            guard Keychain.save(trimmed, for: Self.githubTokenAccount) else {
+                localError = "Couldn't save the GitHub token to Keychain"
+                return
+            }
+            hasGitHubToken = true
+        }
+        localError = nil
+        Task {
+            await scheduler.setGitHubToken(hasGitHubToken ? trimmed : nil)
+            await scheduler.refresh()
+            githubProblem = await scheduler.githubProblem()
         }
     }
 

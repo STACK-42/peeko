@@ -86,6 +86,11 @@ public final class Scheduler {
         return await fetcher.problem(for: request)
     }
 
+    /// A GitHub token for the configured user, so private pushes count. nil or blank removes it.
+    public func setGitHubToken(_ token: String?) async {
+        await github.setToken(token)
+    }
+
     /// The last GitHub problem for the configured username, if any.
     public func githubProblem() async -> String? {
         githubUsername.isEmpty ? nil : await github.problem(for: githubUsername)

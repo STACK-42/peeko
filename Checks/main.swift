@@ -250,6 +250,29 @@ do {
     check(await missingUser.problem(for: "nobody") == "GitHub doesn't know that username", "404 → unknown username")
     _ = await missingUser.events(for: "nobody", now: t0.addingTimeInterval(600))
     check(await missingUser.problem(for: "nobody") == nil, "a good answer clears the problem")
+
+    let tokenHTTP = FakeHTTP([
+        .init(status: 200, body: eventsJSON([]), etag: "\"public\""),
+        .init(status: 200, body: eventsJSON([("PushEvent", "2026-10-10T09:00:00Z")]), etag: nil),
+        .init(status: 401, body: "", etag: nil),
+    ])
+    let withToken = GitHubEventsClient(http: tokenHTTP)
+    _ = await withToken.events(for: "octocat", now: t0)
+    await withToken.setToken("  ghp_secret \n")
+    let privateEvents = await withToken.events(for: "octocat", now: t0.addingTimeInterval(1))
+    check(privateEvents?.count == 1, "setting a token drops the cache and refetches right away")
+    let tokenRequest = await tokenHTTP.requests.last
+    check(tokenRequest?.url?.absoluteString == "https://api.github.com/users/octocat/events?per_page=100", "a token asks for all events, private ones included")
+    check(tokenRequest?.value(forHTTPHeaderField: "Authorization") == "Bearer ghp_secret", "sends the trimmed token")
+    check(tokenRequest?.value(forHTTPHeaderField: "If-None-Match") == nil, "doesn't reuse the public endpoint's ETag")
+    check(await tokenHTTP.requests.first?.value(forHTTPHeaderField: "Authorization") == nil, "no Authorization header without a token")
+    _ = await withToken.events(for: "octocat", now: t0.addingTimeInterval(601))
+    check(await withToken.problem(for: "octocat") == "GitHub didn't accept your token", "401 → bad token")
+    await withToken.setToken("   ")
+    check(await withToken.problem(for: "octocat") == nil, "clearing the token clears its problem")
+    _ = await withToken.events(for: "octocat", now: t0.addingTimeInterval(602))
+    let afterClear = await tokenHTTP.requests.last
+    check(afterClear?.url?.path == "/users/octocat/events/public" && afterClear?.value(forHTTPHeaderField: "Authorization") == nil, "a blank token goes back to public events")
 }
 
 group("GitHubPushVerifier")
