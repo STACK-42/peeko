@@ -87,6 +87,9 @@ Manual tasks are never written by evaluation. Their status comes only from taps 
 - keeps the cache on errors and retries at the next poll
 - validates usernames before building a URL
 - uses `URLSessionHTTPClient` with no `URLCache`, so the 304s reach us
+- with a token (`setToken`), asks `/users/{name}/events` with `Authorization: Bearer` instead of `/events/public`; authenticated as that user, GitHub includes their private events. Changing the token drops the cache, and a 401 shows as "GitHub didn't accept your token"
+
+The token is optional and lives in the login Keychain (`Keychain.swift`, service `com.a7med7x7.peeko`, account `github-token`), never in `settings.json`. `AppModel` reads it at launch and hands it to the scheduler; Settings only shows whether one is saved. A classic token with the `repo` scope works. The app is ad-hoc signed, so after an update macOS may ask once to let Peeko read it.
 
 Unauthenticated 304s **do** count against GitHub's 60/hour limit; polling every 10 minutes uses 6. GitHub's events API can lag by hours, so the UI says "checking…" rather than "not done".
 

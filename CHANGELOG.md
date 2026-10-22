@@ -10,6 +10,7 @@ All notable changes to Peeko are listed here. The format follows [Keep a Changel
 
 ### Added
 
+- An optional GitHub token in Settings, so pushes to private repos count too. Peeko keeps it in your Keychain and sends it only to GitHub. A classic token with the repo scope works.
 - "Solved a LeetCode problem" and "Solved a Codeforces problem": an accepted solution today, checked like the GitHub push (Codeforces' official API; LeetCode's public GraphQL, which is unofficial). When a site can't be reached, the task says so.
 
 - "Stay under" tasks: keep time in an app (or on a site) below a limit. Ships with "Under 45 min of YouTube". The ring shows time used and turns pink near the limit. Going over marks it missed for the day; staying under counts as done when the day ends.

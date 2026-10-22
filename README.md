@@ -87,14 +87,14 @@ On Windows, closing the window keeps Peeko in the tray. Right-click the tray fac
 
 There are no accounts, servers, or analytics. Your tasks and history are plain JSON files in `~/Library/Application Support/Peeko/` on a Mac and `%APPDATA%\Peeko` on Windows, so you can read them, back them up, or delete them whenever you like.
 
-If you turn on the GitHub task, Peeko asks GitHub's public API for your public activity every 10 minutes, using the username you gave it. That's the only network request it makes. No token, so private repos don't count.
+If you turn on the GitHub task, Peeko asks GitHub's public API for your public activity every 10 minutes, using the username you gave it. That's the only network request it makes. Private repos only count if you add a GitHub token in Settings (on a Mac). Peeko keeps it in your Keychain and sends it only to GitHub.
 
 ## How it decides you did something
 
 Peeko only looks at a couple of simple signals:
 
 - **Time in an app:** which app is in front, and whether you've touched the keyboard or mouse in the last couple of minutes. If both hold, the minute counts.
-- **GitHub:** whether your public activity shows a push made today, in your own time zone.
+- **GitHub:** whether your activity shows a push made today, in your own time zone. That's public pushes, plus private ones if you've added a token.
 - **When you're at the computer:** the stretches of keyboard and mouse activity, used for the sleep and early-morning tasks. It only sees the computer, not your phone in bed.
 - **Website limits:** the title of the front window, to spot sites like YouTube. This needs Accessibility permission, and Peeko only asks when you turn on a limit that uses it.
 - **Your notes folder:** which `.md` and `.txt` files changed today and how many words were added. Only the folder you pick, and nothing leaves your computer.
