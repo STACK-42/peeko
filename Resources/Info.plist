@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2.0</string>
+	<string>0.3.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
@@ -36,13 +36,13 @@
 	<string>© 2026 Ahmed Alghali. MIT License.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>Peeko reads which of todays reminders you finished, for the "Cleared todays Reminders" task. Nothing leaves your Mac.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Peeko reads which of todays reminders you finished, for the "Cleared todays Reminders" task. Nothing leaves your Mac.</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://github.com/STACK-42/peeko/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>Km+IExw6QEK/jBbJHgsXKY/JXOTT+3VMOEns6mMNgQc=</string>
-	<key>NSRemindersUsageDescription</key>
-	<string>Peeko reads which of todays reminders you finished, for the "Cleared todays Reminders" task. Nothing leaves your Mac.</string>
 </dict>
 </plist>
