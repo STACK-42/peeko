@@ -4,6 +4,8 @@ All notable changes to Peeko are listed here. The format follows [Keep a Changel
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-22
+
 ### Changed
 
 - Peeko now starts at login by default, so it's there every time you sign in. It turns this on once, the first time you open this version; switch it off in Settings and it stays off.
