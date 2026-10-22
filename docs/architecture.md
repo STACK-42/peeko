@@ -170,7 +170,7 @@ The scheduler moves to a new day file on every tick, on `NSCalendarDayChanged`, 
 
 ## App layer
 
-- **`AppModel`** (`@MainActor @Observable`) holds the presets, the task list (`tasks.json`) and the settings (`settings.json`), and owns the `Scheduler`. Whenever the task list or GitHub username changes, it updates the scheduler and asks it to re-evaluate. It also owns notification permission and launch at login (`SMAppService.mainApp`).
+- **`AppModel`** (`@MainActor @Observable`) holds the presets, the task list (`tasks.json`) and the settings (`settings.json`), and owns the `Scheduler`. Whenever the task list or GitHub username changes, it updates the scheduler and asks it to re-evaluate. It also owns notification permission, launch at login (`SMAppService.mainApp`) and the `Updater` (Sparkle; see [releasing.md](releasing.md#auto-updates-sparkle)).
 - **Notifications** (`Notifier`, wrapping `UNUserNotificationCenter`):
   - `Scheduler.onAutoComplete` fires once when an *automatic* task flips to done, and the app posts "Peeko saw that!". Manual taps never notify.
   - `Scheduler.onTick` drives the evening reminder. `EveningNudge.isDue` decides, and the last reminder's day is kept in `UserDefaults` so it fires at most once a day.

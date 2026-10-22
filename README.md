@@ -38,7 +38,7 @@ Early days. What works right now on the Mac (Windows has all of it except the Ti
 - starts when you log in, so it's always there (you can turn that off in Settings)
 - everything saved locally, with a fresh list each morning
 
-Not built yet: auto-updates. For now, new versions are on the Releases page.
+Peeko updates itself: it looks for a new version once a day, and **Settings → Check now** looks right away. That starts with v0.3.0; on v0.2.0 or older, install the new version once by hand.
 
 ## Install
 
